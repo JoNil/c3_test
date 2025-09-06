@@ -79,11 +79,11 @@ fn void init() {
   state.shapes[TORUS].pos = {0.0, -1.0, 0.0};
 
   // generate shape geometries
-  Vertex[6 * 1024] vertices;
-  ushort[16 * 1024] indices;
+  Vertex[6 * 1024] *vertices = mem::new (Vertex[6 * 1024]);
+  ushort[16 * 1024] *indices = mem::new (ushort[16 * 1024]);
   sshape::Buffer buf = {
-      .vertices = {.buffer = {.ptr = &vertices, .size = $sizeof(vertices)}},
-      .indices = {.buffer = {.ptr = &indices, .size = $sizeof(indices)}},
+      .vertices = {.buffer = {.ptr = vertices, .size = $sizeof(*vertices)}},
+      .indices = {.buffer = {.ptr = indices, .size = $sizeof(*indices)}},
   };
 
   buf = sshape::build_box(&buf, &&(Box){
