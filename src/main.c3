@@ -209,7 +209,7 @@ fn void cleanup() => @pool() {
   sg::shutdown();
 }
 
-fn void main() => @pool() {
+fn void main() {
   sapp::run(&&(sapp::Desc){
       .init_cb = &init,
       .frame_cb = &frame,
