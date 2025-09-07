@@ -189,7 +189,7 @@ fn void frame() => @pool() {
   sg::commit();
 }
 
-fn void input(sapp::Event *ev) {
+fn void input(sapp::Event *ev) => @pool() {
   if (ev.type == event_type::KEY_DOWN) {
     switch (ev.key_code) {
     case keycode::NUM_1:
@@ -204,12 +204,12 @@ fn void input(sapp::Event *ev) {
   }
 }
 
-fn void cleanup() {
+fn void cleanup() => @pool() {
   sdtx::shutdown();
   sg::shutdown();
 }
 
-fn void main() {
+fn void main() => @pool() {
   sapp::run(&&(sapp::Desc){
       .init_cb = &init,
       .frame_cb = &frame,
