@@ -53,6 +53,4 @@ fn void main() {
       }
     };
   }
-
-  os::exit(-1);
 }
