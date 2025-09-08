@@ -22,15 +22,16 @@ const int NUM_SHAPES = 5;
 struct State {
   sg::PassAction pass_action;
   sg::Pipeline pip;
-  sg::Buffer vbuf, ibuf;
+  sg::Buffer vbuf;
+  sg::Buffer ibuf;
   Shape[NUM_SHAPES] shapes;
   VsParams vs_params;
-  float rx, ry;
+  float rx;
+  float ry;
 }
 
-State state;
-
-fn void init() => @pool() {
+fn void init(void* userdata) => @pool() {
+  State* state = userdata;
 
   sg::setup(&&{
     .environment = sglue::environment(),
@@ -133,7 +134,8 @@ fn void init() => @pool() {
   state.ibuf = sg::make_buffer(&&sshape::index_buffer_desc(&buf));
 }
 
-fn void frame() => @pool() {
+fn void frame(void* userdata) => @pool() {
+  State* state = userdata;
 
   sdtx::canvas(sapp::widthf() * 0.5, sapp::heightf() * 0.5);
   sdtx::pos(0.5, 0.5);
@@ -191,7 +193,8 @@ fn void frame() => @pool() {
   sg::commit();
 }
 
-fn void input(sapp::Event *ev) => @pool() {
+fn void input(sapp::Event* ev, void* userdata) => @pool() {
+  State* state = userdata;
   if (ev.type == event_type::KEY_DOWN) {
     switch (ev.key_code) {
     case keycode::NUM_1:
@@ -206,17 +209,20 @@ fn void input(sapp::Event *ev) => @pool() {
   }
 }
 
-fn void cleanup() => @pool() {
+fn void cleanup(void* userdata) => @pool() {
   sdtx::shutdown();
   sg::shutdown();
 }
 
 fn void main() {
+  State* state = mem::tnew(State);
+
   sapp::run(&&{
-    .init_cb = &init,
-    .frame_cb = &frame,
-    .cleanup_cb = &cleanup,
-    .event_cb = &input,
+    .init_userdata_cb = &init,
+    .frame_userdata_cb = &frame,
+    .cleanup_userdata_cb = &cleanup,
+    .event_userdata_cb = &input,
+    .user_data = state,
     .width = 800,
     .height = 600,
     .sample_count = 4,
