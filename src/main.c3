@@ -172,8 +172,8 @@ fn void frame() => @pool() {
   sg::begin_pass(&&{ .action = state.pass_action, .swapchain = sglue::swapchain() });
   sg::apply_pipeline(state.pip);
   sg::apply_bindings(&&{
-      .vertex_buffers = {[0] = state.vbuf},
-      .index_buffer = state.ibuf,
+    .vertex_buffers = {[0] = state.vbuf},
+    .index_buffer = state.ibuf,
   });
   for (int i = 0; i < NUM_SHAPES; i++) {
     // per shape model-view-projection matrix
