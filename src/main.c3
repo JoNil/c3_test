@@ -3,6 +3,7 @@ module main;
 import math;
 import sokol;
 import std;
+import shaders;
 
 alias Mat4 = math::Mat4;
 
@@ -37,7 +38,7 @@ fn void init() => @pool() {
   });
   sdtx::setup(&&{
     .fonts = {[0] = sdtx::font_c64()},
-    .logger = {.func = &slog::func},
+    .logger.func = &slog::func,
   });
 
   // clear to black
@@ -48,14 +49,14 @@ fn void init() => @pool() {
 
   // shader and pipeline object
   state.pip = sg::make_pipeline(&&{
-    .shader = sg::make_shader(&&shapes_shader_desc(sg::query_backend())),
+    .shader = sg::make_shader(&&shader::shapes_shader_desc(sg::query_backend())),
     .layout = {
       .buffers[0] = sshape::vertex_buffer_layout_state(),
       .attrs = {
-        [ATTR_SHAPES_POSITION] = sshape::position_vertex_attr_state(),
-        [ATTR_SHAPES_NORMAL] = sshape::normal_vertex_attr_state(),
-        [ATTR_SHAPES_TEXCOORD] = sshape::texcoord_vertex_attr_state(),
-        [ATTR_SHAPES_COLOR0] = sshape::color_vertex_attr_state(),
+        [shader::ATTR_SHAPES_POSITION] = sshape::position_vertex_attr_state(),
+        [shader::ATTR_SHAPES_NORMAL] = sshape::normal_vertex_attr_state(),
+        [shader::ATTR_SHAPES_TEXCOORD] = sshape::texcoord_vertex_attr_state(),
+        [shader::ATTR_SHAPES_COLOR0] = sshape::color_vertex_attr_state(),
       },
     },
     .index_type = index_type::UINT16,
@@ -86,7 +87,8 @@ fn void init() => @pool() {
     .height = 1.0,
     .depth = 1.0,
     .tiles = 10,
-    .random_colors = true,
+    .color = 0x44ff44ff,
+    .random_colors = false,
   });
   state.shapes[BOX].draw = sshape::element_range(&buf);
 
@@ -94,7 +96,8 @@ fn void init() => @pool() {
     .width = 1.0,
     .depth = 1.0,
     .tiles = 10,
-    .random_colors = true,
+    .color = 0xff0044ff,
+    .random_colors = false,
   });
   state.shapes[PLANE].draw = sshape::element_range(&buf);
 
@@ -102,7 +105,8 @@ fn void init() => @pool() {
     .radius = 0.75,
     .slices = 36,
     .stacks = 20,
-    .random_colors = true,
+    .color = 0x4400ffff,
+    .random_colors = false,
   });
   state.shapes[SPHERE].draw = sshape::element_range(&buf);
 
@@ -175,7 +179,7 @@ fn void frame() => @pool() {
     // per shape model-view-projection matrix
     Mat4 model = math::mul(math::translate(state.shapes[i].pos), rm);
     state.vs_params.mvp = math::mul(view_proj, model);
-    sg::apply_uniforms(UB_VS_PARAMS, &&{
+    sg::apply_uniforms(shader::UB_VS_PARAMS, &&{
       .ptr = &state.vs_params,
       .size = $sizeof(state.vs_params)
     });
