@@ -42,7 +42,9 @@ fn Vec3 norm_vec3(Vec3 v) {
   return {};
 }
 
-fn Vec3 norm(Vec3 v) { return norm_vec3(v); }
+fn Vec3 norm(Vec3 v) {
+  return norm_vec3(v);
+}
 
 fn Vec3 cross_vec3(Vec3 v0, Vec3 v1) {
   return {
@@ -52,7 +54,9 @@ fn Vec3 cross_vec3(Vec3 v0, Vec3 v1) {
   };
 }
 
-fn Vec3 cross(Vec3 v0, Vec3 v1) { return cross_vec3(v0, v1); }
+fn Vec3 cross(Vec3 v0, Vec3 v1) {
+  return cross_vec3(v0, v1);
+}
 
 fn Mat4 identity_mat4() {
   Mat4 m;
@@ -63,7 +67,9 @@ fn Mat4 identity_mat4() {
   return m;
 }
 
-fn Mat4 identity() { return identity_mat4(); }
+fn Mat4 identity() {
+  return identity_mat4();
+}
 
 fn Mat4 persp_mat4(float fov, float aspect, float near, float far) {
   Mat4 m = identity();
@@ -144,7 +150,9 @@ fn Mat4 translate_mat4(Vec3 translation) {
   return m;
 }
 
-fn Mat4 translate(Vec3 translation) { return translate_mat4(translation); }
+fn Mat4 translate(Vec3 translation) {
+  return translate_mat4(translation);
+}
 
 fn Mat4 mul_mat4(Mat4 left, Mat4 right) {
   Mat4 m;
@@ -152,10 +160,13 @@ fn Mat4 mul_mat4(Mat4 left, Mat4 right) {
     for (int row = 0; row < 4; row++) {
       m[col][row] = left[0][row] * right[col][0] +
                     left[1][row] * right[col][1] +
-                    left[2][row] * right[col][2] + left[3][row] * right[col][3];
+                    left[2][row] * right[col][2] +
+                    left[3][row] * right[col][3];
     }
   }
   return m;
 }
 
-fn Mat4 mul(Mat4 left, Mat4 right) { return mul_mat4(left, right); }
+fn Mat4 mul(Mat4 left, Mat4 right) {
+  return mul_mat4(left, right);
+}
