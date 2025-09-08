@@ -14,11 +14,13 @@ fn void main() {
   foreach (file : paths) {
     @pool() {
 
+      String? ext = file.extension();
+      if (catch err = ext) continue;
+      if (ext != "glsl") continue;
+
       String basename = file.basename();
       usz? index = basename.rindex_of(".");
-      if (catch err = index) {
-        continue;
-      }
+      if (catch err = index) continue;
 
       String filename = basename[..index - 1];
 
